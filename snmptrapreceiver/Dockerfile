@@ -1,6 +1,8 @@
 FROM ubi8/ubi
 
-dnf -y install net-snmp net-snmp-utils
+MAINTAINER Ed Presutti, https://github.com/ekrunch
+
+RUN dnf -y install net-snmp net-snmp-utils
 
 sed -i 's/# authCommunity/authCommunity/g' /etc/snmp/snmptrapd.conf
 
@@ -13,3 +15,5 @@ systemctl enable snmptrapd
 firewall-cmd --add-service=snmp --add-service=snmptrap --permanent --zone=public
 firewall-cmd --reload
 
+EXPOSE 161:161/udp
+EXPOSE 162:162/udp
