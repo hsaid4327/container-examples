@@ -3,4 +3,4 @@
 . /etc/sysconfig/snmpd && /usr/sbin/snmpd &
 . /etc/sysconfig/snmptrapd && /usr/sbin/snmptrapd &
 
-tail -f /var/log/messages
+tail -f /dev/null
