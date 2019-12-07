@@ -10,7 +10,4 @@ ADD startsnmpd.sh /
 
 CMD ["/startsnmpd.sh"]
 
-EXPOSE 161:1161/udp
-EXPOSE 161:1161/tcp
-EXPOSE 162:1162/udp
-EXPOSE 162:1162/tcp
+EXPOSE 1161/udp 1161/tcp 1162/udp 1162/tcp
