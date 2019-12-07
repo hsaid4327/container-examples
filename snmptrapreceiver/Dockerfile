@@ -1,4 +1,4 @@
-FROM ubi8/ubi
+FROM centos:8
 
 MAINTAINER Ed Presutti, https://github.com/ekrunch
 
