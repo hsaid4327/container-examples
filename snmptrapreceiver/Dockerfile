@@ -6,9 +6,6 @@ RUN dnf -y install net-snmp net-snmp-utils
 
 RUN sed -i 's/# authCommunity/authCommunity/g' /etc/snmp/snmptrapd.conf
 
-RUN firewall-cmd --add-service=snmp --add-service=snmptrap --permanent --zone=public
-RUN firewall-cmd --reload
-
 CMD service snmpd start
 CMD service snmptrapd start
 
