@@ -6,8 +6,9 @@ RUN dnf -y install net-snmp net-snmp-utils
 
 RUN sed -i 's/# authCommunity/authCommunity/g' /etc/snmp/snmptrapd.conf
 
-CMD . /etc/sysconfig/snmpd && /usr/sbin/snmpd &
-CMD . /etc/sysconfig/snmptrapd && /usr/sbin/snmptrapd &
+ADD startsnmpd.sh /
+
+CMD ["/startsnmpd.sh"]
 
 EXPOSE 161:161/udp
 EXPOSE 162:162/udp
