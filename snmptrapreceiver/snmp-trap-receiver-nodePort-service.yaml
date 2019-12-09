@@ -1,0 +1,28 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: snmp-trap-receiver
+  namespace: snmp-receiver
+  labels:
+    app: snmp-trap-receiver
+    app.kubernetes.io/component: snmp-trap-receiver
+    app.kubernetes.io/instance: snmp-trap-receiver
+    app.kubernetes.io/part-of: snmp-trap-receiver-app
+spec:
+  ports:
+    - name: 1162-tcp
+      protocol: TCP
+      port: 1162
+      targetPort: 1162
+      nodePort: 31162
+    - name: 1162-udp
+      protocol: UDP
+      port: 1162
+      targetPort: 1162
+      nodePort: 31162
+  selector:
+    app: snmp-trap-receiver
+    deploymentconfig: snmp-trap-receiver
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
