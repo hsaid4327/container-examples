@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: https://github.com/ekrunch/container-examples.git
+  creationTimestamp: "2019-12-09T21:07:42Z"
+  labels:
+    app: snmp-trap-receiver
+    app.kubernetes.io/component: snmp-trap-receiver
+    app.kubernetes.io/instance: snmp-trap-receiver
+    app.kubernetes.io/part-of: snmp-trap-receiver-app
+  name: snmp-trap-receiver
+  namespace: snmp-trap-receiver
+  resourceVersion: "5028401"
+  selfLink: /api/v1/namespaces/snmp-trap-receiver/services/snmp-trap-receiver
+  uid: f06e4a03-1ac7-11ea-84c0-005056112211
+spec:
+  clusterIP: 172.30.104.68
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: 1161-tcp
+    nodePort: 31161
+    port: 1161
+    protocol: TCP
+    targetPort: 1161
+  - name: 1161-udp
+    nodePort: 31161
+    port: 1161
+    protocol: UDP
+    targetPort: 1161
+  - name: 1162-tcp
+    nodePort: 31162
+    port: 1162
+    protocol: TCP
+    targetPort: 1162
+  - name: 1162-udp
+    nodePort: 31162
+    port: 1162
+    protocol: UDP
+    targetPort: 1162
+  selector:
+    app: snmp-trap-receiver
+    deploymentconfig: snmp-trap-receiver
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

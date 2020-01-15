@@ -1,0 +1,20 @@
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  annotations:
+    openshift.io/description: ""
+    openshift.io/display-name: SNMP Trap receiver Demo
+    openshift.io/requester: epresutt@redhat.com
+    openshift.io/sa.scc.mcs: s0:c24,c9
+    openshift.io/sa.scc.supplemental-groups: 1000570000/10000
+    openshift.io/sa.scc.uid-range: 1000570000/10000
+  creationTimestamp: "2019-12-09T21:05:16Z"
+  name: snmp-trap-receiver
+  resourceVersion: "4392115"
+  selfLink: /apis/project.openshift.io/v1/projects/snmp-trap-receiver
+  uid: 99aecc20-1ac7-11ea-8a76-005056112233
+spec:
+  finalizers:
+  - kubernetes
+status:
+  phase: Active

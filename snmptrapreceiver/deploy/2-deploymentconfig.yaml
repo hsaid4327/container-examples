@@ -1,0 +1,66 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: https://github.com/ekrunch/container-examples.git
+  creationTimestamp: "2019-12-09T21:07:42Z"
+  generation: 3
+  labels:
+    app: snmp-trap-receiver
+    app.kubernetes.io/component: snmp-trap-receiver
+    app.kubernetes.io/instance: snmp-trap-receiver
+    app.kubernetes.io/part-of: snmp-trap-receiver-app
+  name: snmp-trap-receiver
+  namespace: snmp-trap-receiver
+  resourceVersion: "32274727"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/snmp-trap-receiver/deploymentconfigs/snmp-trap-receiver
+  uid: f06d31a5-1ac7-11ea-83e8-0a580a810024
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: snmp-trap-receiver
+    deploymentconfig: snmp-trap-receiver
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: snmp-trap-receiver
+        deploymentconfig: snmp-trap-receiver
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/snmp-trap-receiver/snmp-trap-receiver@sha256:a125376a6cb55ea299703645ef19f9dd6a5763a7cbdd3e9869b13c124b26ca14
+        imagePullPolicy: Always
+        name: snmp-trap-receiver
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - snmp-trap-receiver
+      from:
+        kind: ImageStreamTag
+        name: snmp-trap-receiver:latest
+        namespace: snmp-trap-receiver
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/snmp-trap-receiver/snmp-trap-receiver@sha256:a125376a6cb55ea299703645ef19f9dd6a5763a7cbdd3e9869b13c124b26ca14
+    type: ImageChange
+  - type: ConfigChange
