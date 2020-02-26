@@ -1,0 +1,2 @@
+[mysqld]
+plugin-load=auth_pam.so
