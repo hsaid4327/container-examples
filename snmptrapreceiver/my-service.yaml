@@ -1,0 +1,28 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-trap-test
+  namespace: trap-test
+  labels:
+    app: trap-test
+    app.kubernetes.io/component: my-trap-test
+    app.kubernetes.io/instance: my-trap-test
+    app.kubernetes.io/part-of: my-trap-test-app
+spec:
+  ports:
+    - name: 1162-tcp
+      protocol: TCP
+      port: 1162
+      targetPort: 1162
+      nodePort: 31162
+    - name: 1162-udp
+      protocol: UDP
+      port: 1162
+      targetPort: 1162
+      nodePort: 31162
+  selector:
+    app: my-trap-test
+    deploymentconfig: my-trap-test
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
