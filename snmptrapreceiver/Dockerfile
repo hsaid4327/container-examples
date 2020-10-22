@@ -11,6 +11,7 @@ RUN chmod 777 /var/log/snmp
 RUN sed -i 's/# authCommunity/authCommunity/g' /etc/snmp/snmptrapd.conf
 RUN chgrp -R 0 /etc/snmp && \
     chmod -R g=u /etc/snmp
+VOLUME /var/log/snmp
 
 ADD startsnmpd.sh /
 
