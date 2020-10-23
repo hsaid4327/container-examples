@@ -4,7 +4,7 @@ MAINTAINER Ed Presutti, https://github.com/ekrunch
 
 RUN dnf -y install net-snmp net-snmp-utils
 
-RUN mkdir /var/log/snmp
+RUN mkdir /var/log/snmp /home/mydata
 
 RUN chmod 777 /var/log/snmp
 
@@ -14,6 +14,7 @@ RUN chgrp -R 0 /etc/snmp && \
 VOLUME /home/mydata
 
 ADD startsnmpd.sh /
+ADD test.txt /home/mydata
 
 CMD ["/startsnmpd.sh"]
 
