@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#touch /tmp/snmptrap.log test1
+#touch /tmp/snmptrap.log test2
 
 echo Starting snmpd
 #. /etc/sysconfig/snmpd && /usr/sbin/snmpd tcp:1161 udp:1161 -Lo &
