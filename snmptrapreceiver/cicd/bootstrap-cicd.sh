@@ -134,7 +134,7 @@ REPO_URL=$ARG_REPO_URL
 REPO_REF=$ARG_REPO_REF
 CONTEXT_DIR=$ARG_CONTEXT_DIR
 
-template="cisco-cicd-template.yaml"
+template="avaya-cicd-template.yaml"
 
 
 function setup_projects() {
