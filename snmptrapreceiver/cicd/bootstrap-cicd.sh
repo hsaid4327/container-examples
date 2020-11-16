@@ -138,7 +138,7 @@ template="avaya-cicd-template.yaml"
 
 
 function setup_projects() {
-  echo_header "*****************  Setting up projects  *******************************"
+  echo_header Setting up projects
   oc new-project  $DEV_PROJECT   --display-name="$ARG_PROJECT_SUFFIX - Dev"
   oc  new-project $STAGE_PROJECT --display-name="$ARG_PROJECT_SUFFIX - Stage"
   cicdCreated=$(oc projects | grep $CICD_PROJECT)
