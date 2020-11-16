@@ -75,5 +75,5 @@ objects:
         - name: APP_NAME
           value: ${APP_NAME}
 
-        jenkinsfilePath: Jenkinsfile
+        jenkinsfilePath: cicd/Jenkinsfile
       type: JenkinsPipeline
