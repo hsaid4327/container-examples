@@ -6,7 +6,6 @@ echo "#  $ oc login http://<api-url>                                            
 echo "###############################################################################"
 
 function usage() {
- echo
     echo "Usage:"
     echo " $0 [command] [options]"
     echo " $0 --help"
