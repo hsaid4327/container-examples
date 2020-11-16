@@ -1,0 +1,30 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Build Image') {
+      steps {
+        echo "************ Building an application image ************"
+      }
+
+    }
+    stage('Deploy to env.DEV_PROJECT') {
+      steps {
+         echo "Deploying to env.DEV_PROJECT"
+      }
+    }
+    stage('Promote to STAGE?') {
+
+        steps {
+          timeout(time:15, unit:'MINUTES') {
+              input message: "Promote to STAGE?", ok: "Promote"
+            }
+
+      }
+    stage('Deploy STAGE') {
+        steps {
+          echo "Deploying to env.STAGE_PROJECT"
+      }
+
+ }
+}
