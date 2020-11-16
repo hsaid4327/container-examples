@@ -101,6 +101,7 @@ while :; do
                    ARG_CONTEXT_DIR=$2
                    shift
 
+               fi
                ;;
 
         -h|--help)
