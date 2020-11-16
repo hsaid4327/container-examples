@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: cicd
+  group: cicd
+metadata:
+  annotations:
+    iconClass: icon-jenkins
+    tags: instant-app,jenkins,gogs,nexus,cicd
+  name: cicd
+message: "Use the following credentials for login:\nJenkins: use your OpenShift credentials"
+parameters:
+- displayName: DEV project name
+  name: DEV_PROJECT
+  required: true
+- displayName: STAGE project name
+  name: STAGE_PROJECT
+  required: true
+- displayName: CICD project name
+  name: CICD_PROJECT
+  required: true
+- displayName: Applicaton name
+  name: APP_NAME
+  required: true
+- displayName: Repository url
+  name: REPO_URL
+  required: true
+- displayName: context directory
+  name: CONTEXT_DIR
+  required: true  
+- displayName: Repository reference
+  name: REPO_REF
+  value: master
+- description: Webhook secret
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: WEBHOOK_SECRET
+  required: true
+
+objects:
+
+# Pipeline
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "jenkins", "namespace": "", "kind": "DeploymentConfig"}]'
+    labels:
+      app: ${APP_NAME}-pipeline
+      name: ${APP_NAME}-pipeline
+    name: ${APP_NAME}-pipeline
+    namespace: ${CICD_PROJECT}
+  spec:
+    triggers:
+      - type: GitHub
+        github:
+          secret: ${WEBHOOK_SECRET}
+      - type: Generic
+        generic:
+          secret: ${WEBHOOK_SECRET}
+    runPolicy: Serial
+    source:
+      contextDir: ${CONTEXT_DIR}
+      type: "Git"
+      git:
+        uri: ${REPO_URL}
+        ref: ${REPO_REF}
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: DEV_PROJECT
+          value: ${DEV_PROJECT}
+        - name: STAGE_PROJECT
+          value: ${STAGE_PROJECT}
+        - name: APP_NAME
+          value: ${APP_NAME}
+
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
