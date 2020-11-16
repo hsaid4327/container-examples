@@ -161,7 +161,14 @@ function setup_projects() {
 
 function setup_applications() {
     echo_header "Setting up Openshift application resources"
-    oc new-app jenkins-persistent -n $CICD_PROJECT
+     jenkinsInstalled=$(oc get pods -n $CICD_PROJECT | grep "avaya-jenkins")
+  if [ -z "$jenkinsInstalled" ]; then
+    echo "Jenikins already installed"
+  else
+    oc new-app jenkins-persistent --name avaya-jenkins -n $CICD_PROJECT
+
+  fi
+
     sleep 2
 
 
