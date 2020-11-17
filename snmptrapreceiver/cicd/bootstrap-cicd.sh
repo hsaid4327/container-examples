@@ -68,6 +68,7 @@ while :; do
         --app-name)
             if [ -n "$2" ]; then
                 ARG_APP_NAME=$2
+		echo "ARG_APP_NAME: $ARG_APP_NAME"
                 shift
             else
                 printf 'ERROR: "--arg-app-name" requires a non-empty value.\n' >&2
@@ -154,19 +155,19 @@ function setup_projects() {
   oc policy add-role-to-group edit system:serviceaccounts:$CICD_PROJECT -n $STAGE_PROJECT
   oc policy add-role-to-group edit system:serviceaccounts:$STAGE_PROJECT -n $DEV_PROJECT
 
-  echo "Using template $template"
   echo_header "processing template"
+
   oc process -f $template -p DEV_PROJECT=$DEV_PROJECT -p STAGE_PROJECT=$STAGE_PROJECT -p CICD_PROJECT=$CICD_PROJECT -p APP_NAME=$APP_NAME  -p REPO_URL=$REPO_URL -p REPO_REF=$REPO_REF -p CONTEXT_DIR=$CONTEXT_DIR | oc create -f - -n $CICD_PROJECT
 }
 
 function setup_applications() {
-    echo_header "Setting up Openshift application resources"
-     jenkinsInstalled=$(oc get pods -n $CICD_PROJECT | grep "avaya-jenkins")
+  echo_header "Setting up Openshift application resources"
+  jenkinsInstalled=$(oc get pods -n $CICD_PROJECT | grep "jenkins")
   if [ -z "$jenkinsInstalled" ]; then
-    echo "Jenikins already installed"
+    oc new-app jenkins-persistent -n $CICD_PROJECT
   else
-    oc new-app jenkins-persistent --name avaya-jenkins -n $CICD_PROJECT
 
+    echo "Jenikins already installed"
   fi
 
     sleep 2
@@ -183,7 +184,11 @@ function echo_header() {
 }
 
 
-
+function delete_setup() {
+   buildPipeline=$(oc get bc/$APP_NAME-pipeline -o jsonpath='{.metadata.labels.name}')
+   oc delete bc $buildPipeline
+   oc delete project $DEV_PROJECT $STAGE_PROJECT
+}
 
 START=`date +%s`
 
@@ -193,8 +198,7 @@ echo_header "OpenShift CI/CD Demo ($(date))"
 case "$ARG_COMMAND" in
     delete)
         echo "Delete demo..."
-        oc delete project $DEV_PROJECT $STAGE_PROJECT $CICD_PROJECT
-        echo
+	delete_setup
         echo "Delete completed successfully!"
         ;;
 
