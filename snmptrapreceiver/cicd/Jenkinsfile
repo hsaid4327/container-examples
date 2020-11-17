@@ -10,7 +10,7 @@ pipeline {
     }
     stage('Deploy to env.DEV_PROJECT') {
       steps {
-         echo "Deploying to env.DEV_PROJECT"
+        echo "Deploying to ${env.DEV_PROJECT}"
       }
     }
     stage('Promote to STAGE?') {
@@ -23,7 +23,7 @@ pipeline {
     }
     stage('Deploy STAGE') {
         steps {
-          echo "Deploying to env.STAGE_PROJECT"
+          echo "Deploying to ${env.STAGE_PROJECT}"
          }
 
     }
