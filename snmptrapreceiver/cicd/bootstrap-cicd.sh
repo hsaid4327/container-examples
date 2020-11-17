@@ -11,9 +11,9 @@ function usage() {
     echo " $0 --help"
     echo
     echo "Example:"
-    echo " $0 deploy --project-suffix mydemo --appname appname --repo-url repourl --repo-reference master --context-dir mydir"
+    echo " $0 deploy --project-suffix mydemo --app-name appname --repo-url repourl --repo-reference master --context-dir mydir"
 
-    echo " $0 delete --project-suffix mydemo"
+    echo " $0 delete --project-suffix mydemo --app-name myapp"
     echo
     echo "COMMANDS:"
     echo "   deploy                   Set up the demo projects and deploy demo apps"
@@ -25,6 +25,7 @@ function usage() {
     echo "   --app-name                required     application name for the deployment artifact and openshift resources."
     echo "   --repo-url                 required    The location url of the git repository of the application source code"
     echo "   --repo-reference           required    The branch of the source code repository"
+    echo "   --app-name          required application name  "
     echo "   --project-suffix [suffix]  Optional    Suffix to be added to demo project names e.g. ci-SUFFIX. If empty, user will be used as suffix"
 
 }
@@ -52,6 +53,11 @@ while :; do
             ;;
         delete)
             ARG_COMMAND=delete
+            if [ "$NUM_ARGS" -lt 4 ]; then
+              printf 'ERROR: "--the number of arguments cannot be less than 3 for deploy command" \n' >&2
+              usage
+              exit 255
+            fi
             ;;
 
 
@@ -184,10 +190,12 @@ function echo_header() {
 }
 
 
-function delete_setup() {
+function delete_setup() { 
+   echo "APP_NAME: $APP_NAME"
    buildPipeline=$(oc get bc/$APP_NAME-pipeline -o jsonpath='{.metadata.labels.name}')
-   oc delete bc $buildPipeline
-   oc delete project $DEV_PROJECT $STAGE_PROJECT
+   echo "buildPipeline: $buildPipeline"
+   oc delete bc/$buildPipeline
+   #oc delete project $DEV_PROJECT $STAGE_PROJECT
 }
 
 START=`date +%s`
