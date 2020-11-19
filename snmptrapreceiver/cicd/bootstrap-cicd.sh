@@ -170,7 +170,8 @@ function setup_applications() {
   echo_header "Setting up Openshift application resources"
   jenkinsInstalled=$(oc get pods -n $CICD_PROJECT | grep "jenkins")
   if [ -z "$jenkinsInstalled" ]; then
-    oc new-app jenkins-persistent -n $CICD_PROJECT
+    #oc new-app jenkins-persistent -n $CICD_PROJECT
+    oc new-app jenkins-ephemeral -n $CICD_PROJECT
   else
 
     echo "Jenikins already installed"
@@ -195,7 +196,7 @@ function delete_setup() {
    buildPipeline=$(oc get bc/$APP_NAME-pipeline -o jsonpath='{.metadata.labels.name}')
    echo "buildPipeline: $buildPipeline"
    oc delete bc/$buildPipeline
-   #oc delete project $DEV_PROJECT $STAGE_PROJECT
+   oc delete project $DEV_PROJECT $STAGE_PROJECT
 }
 
 START=`date +%s`
