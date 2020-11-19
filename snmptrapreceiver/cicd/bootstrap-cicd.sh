@@ -157,9 +157,9 @@ function setup_projects() {
 
   sleep 2
 
-  oc policy add-role-to-group edit system:serviceaccounts:$CICD_PROJECT -n $DEV_PROJECT
-  oc policy add-role-to-group edit system:serviceaccounts:$CICD_PROJECT -n $STAGE_PROJECT
-  oc policy add-role-to-group edit system:serviceaccounts:$STAGE_PROJECT -n $DEV_PROJECT
+  oc adm policy add-role-to-group edit system:serviceaccounts:$CICD_PROJECT -n $DEV_PROJECT
+  oc adm policy add-role-to-group edit system:serviceaccounts:$CICD_PROJECT -n $STAGE_PROJECT
+  oc adm policy add-role-to-group edit system:serviceaccounts:$STAGE_PROJECT -n $DEV_PROJECT
 
   echo_header "processing template"
 
@@ -173,20 +173,40 @@ function setup_applications() {
     #oc new-app jenkins-persistent -n $CICD_PROJECT
     oc new-app jenkins-ephemeral -n $CICD_PROJECT
   else
-
     echo "Jenikins already installed"
   fi
+  ########################################################
+  # Setting up application resources in $DEV_PROJECT
+  # This would use template once template is finished
+  ########################################################
+  echo_header "Setting up application resources in $DEV_PROJECT"
+  oc new-app --as-deployment-config --strategy docker --name $APP_NAME $REPO_URL --context-dir $CONTEXT_DIR -n $DEV_PROJECT 
+  
+  sleep 5
 
-    sleep 2
+  echo_header "Setting up application resources in $STAGE_PROJECT"
+  
+    cat > stage-is.yaml << EOF
+apiVersion: v1
+kind: ImageStream
+metadata:
+ 
+  labels:
+    app: $APP_NAME
+    
+  name: $APP_NAME 
+  namespace: $STAGE_PROJECT
 
-
-
+spec: {}
+EOF
+oc create -f stage-is.yaml
+  oc new-app --as-deployment-config -i $APP_NAME:stage --allow-missing-imagestream-tags -n $STAGE_PROJECT
 }
 
 function echo_header() {
   echo
   echo "########################################################################"
-  echo $1
+  echo "$1"
   echo "########################################################################"
 }
 
@@ -195,7 +215,13 @@ function delete_setup() {
    echo "APP_NAME: $APP_NAME"
    buildPipeline=$(oc get bc/$APP_NAME-pipeline -o jsonpath='{.metadata.labels.name}')
    echo "buildPipeline: $buildPipeline"
-   oc delete bc/$buildPipeline
+   if [ -n "$buildPipeline" ]; then
+      oc delete bc $buildPipeline
+   fi
+   oc adm policy remove-role-from-group edit system:serviceaccounts:$CICD_PROJECT -n $DEV_PROJECT
+   oc adm policy remove-role-from-group edit system:serviceaccounts:$CICD_PROJECT -n $STAGE_PROJECT
+   oc adm policy  remove-role-from-group edit system:serviceaccounts:$STAGE_PROJECT -n $DEV_PROJECT
+
    oc delete project $DEV_PROJECT $STAGE_PROJECT
 }
 
